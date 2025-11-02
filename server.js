@@ -13,8 +13,7 @@ app.use(express.json());
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.log(err));
-
+  .catch(err => console.error("❌ MongoDB Connection Error:", err.message));
 // Schema & Model
 const todoSchema = new mongoose.Schema({
   text: String,
