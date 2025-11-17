@@ -6,10 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE"]
-}));
+app.use(cors());
 app.use(express.json());
 
 // ✅ MongoDB connection
