@@ -1,16 +1,27 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ MongoDB connection
-mongoose
-  .connect//moizh6000:uEHLjLl8NVOolqoJ@mycuster.fngnpae.mongodb.net/myDatabase?appName=MyCuster)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch(err => console.error("❌ MongoDB Connection Error:", err.message));
+// ✅ MongoDB connection (Correct way for Node 20+)
+async function connectDB() {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      dbName: "todo", // optional but recommended
+    });
+    console.log("✅ MongoDB Connected");
+  } catch (err) {
+    console.error("❌ MongoDB Connection Error:", err.message);
+  }
+}
+
+connectDB();
 
 // ✅ Schema & Model
 const todoSchema = new mongoose.Schema({
@@ -18,7 +29,7 @@ const todoSchema = new mongoose.Schema({
 });
 const Todo = mongoose.model("Todo", todoSchema);
 
-// ✅ Default route (for Railway test)
+// ✅ Default route (Railway test)
 app.get("/", (req, res) => {
   res.send("🚀 Backend running successfully!");
 });
@@ -32,25 +43,30 @@ app.get("/todos", async (req, res) => {
 // ✅ Add new todo
 app.post("/todos", async (req, res) => {
   const { text } = req.body;
+
   if (!text || text.trim() === "") {
     return res.status(400).json({ error: "Text is required" });
   }
+
   const todo = new Todo({ text });
   await todo.save();
   res.json(todo);
 });
 
-// ✅ Update (Edit) todo
+// ✅ Update todo
 app.put("/todos/:id", async (req, res) => {
   const { text } = req.body;
+
   if (!text || text.trim() === "") {
     return res.status(400).json({ error: "Text is required" });
   }
+
   const updatedTodo = await Todo.findByIdAndUpdate(
     req.params.id,
     { text },
     { new: true }
   );
+
   res.json(updatedTodo);
 });
 
