@@ -12,7 +12,7 @@ app.use(express.json());
 // ✅ MongoDB connection (Correct way for Node 20+)
 async function connectDB() {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect("mongodb+srv://moizh6000:uEHLjLl8NVOolqoJ@mycuster.fngnpae.mongodb.net/myDatabase?appName=MyCuster");
     console.log("✅ MongoDB Connected");
   } catch (err) {
     console.error("❌ MongoDB Connection Error:", err.message);
