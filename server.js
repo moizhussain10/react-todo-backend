@@ -5,7 +5,19 @@ import dotenv from "dotenv";
 dotenv.config(); 
 
 const app = express();
-app.use(cors());
+
+app.use(
+  cors({
+    origin: [
+      "https://react-todo-frontend-liart.vercel.app",
+      "http://localhost:5173", // Local testing ke liye
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 async function connectDB() {
